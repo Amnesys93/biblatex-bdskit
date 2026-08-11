@@ -1,0 +1,23 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[bulgarian,english]{babel}
+
+\usepackage[
+    backend=biber,
+    style=bdskit
+]{biblatex}
+
+\addbibresource{example.bib}
+
+\begin{document}
+
+Това е пример за единично цитиране \cite{example1}.
+
+Това е пример за няколко цитирания
+\cite{example2,example3,example4,example5,example6}.
+
+\printbibliography
+
+\end{document}

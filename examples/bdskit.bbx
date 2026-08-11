@@ -1,0 +1,58 @@
+% biblatex-bdskit
+% BDS-inspired BibLaTeX citation and bibliography style
+%
+% Copyright (C) 2026 Vasil Hristov
+%
+% This file is part of biblatex-bdskit.
+%
+% biblatex-bdskit is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% biblatex-bdskit is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+% See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with biblatex-bdskit. If not, see <https://www.gnu.org/licenses/>.
+
+\ProvidesFile{bdskit.bbx}[2026/08/07 BDS-like bibliography style]
+
+\RequireBibliographyStyle{numeric-comp}
+
+\DeclareNameAlias{default}{family-given}
+
+\DeclareFieldFormat{title}{„#1“}
+\DeclareFieldFormat{booktitle}{„#1“}
+\DeclareFieldFormat{journaltitle}{„#1“}
+\DeclareFieldFormat{publisher}{#1}
+\DeclareFieldFormat{location}{#1}
+
+\DeclareFieldFormat{year}{#1}
+
+\DeclareFieldFormat{pages}{С.~#1}
+
+\DeclareFieldFormat{url}{URL: \url{#1}}
+\DeclareFieldFormat{doi}{DOI:~#1}
+
+\renewbibmacro*{publisher+location+date}{%
+  \printlist{publisher}%
+  \setunit*{\addcomma\space}%
+  \printlist{location}%
+  \setunit*{\addcomma\space}%
+  \printfield{year}%
+}
+
+\renewbibmacro*{title}{%
+  \printfield{title}%
+  \newunit
+}
+
+\renewbibmacro*{author}{%
+  \printnames{author}%
+  \newunit
+}
+
+\renewbibmacro*{finentry}{\finentry}

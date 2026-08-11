@@ -1,0 +1,28 @@
+% biblatex-bdskit
+% BDS-inspired BibLaTeX citation and bibliography style
+%
+% Copyright (C) 2026 Vasil Hristov
+%
+% This file is part of biblatex-bdskit.
+%
+% biblatex-bdskit is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% biblatex-bdskit is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+% See the GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with biblatex-bdskit. If not, see <https://www.gnu.org/licenses/>.
+
+\ProvidesFile{bdskit.cbx}[2026/08/10 BDS-like citation style]
+
+\RequireCitationStyle{numeric-comp}
+
+\ExecuteBibliographyOptions{sortcites=true}
+
+\DeclareDelimFormat{multicitedelim}{\addcomma\space}
+
