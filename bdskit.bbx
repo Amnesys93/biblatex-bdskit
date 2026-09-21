@@ -1,5 +1,5 @@
 % biblatex-bdskit
-% BDS-inspired BibLaTeX citation and bibliography style
+% BDS-inspired BibLaTeX bibliography style
 %
 % Copyright (C) 2026 Vasil Hristov
 %
@@ -13,46 +13,268 @@
 % biblatex-bdskit is distributed in the hope that it will be useful,
 % but WITHOUT ANY WARRANTY; without even the implied warranty of
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-% See the GNU General Public License for more details.
 %
 % You should have received a copy of the GNU General Public License
 % along with biblatex-bdskit. If not, see <https://www.gnu.org/licenses/>.
 
-\ProvidesFile{bdskit.bbx}[2026/08/07 BDS-like bibliography style]
+\ProvidesFile{bdskit.bbx}[2026/09/17 BDS-like bibliography style]
 
-\RequireBibliographyStyle{numeric-comp}
+% ============================================================
+% Base bibliography style
+% ============================================================
+
+\RequireBibliographyStyle{numeric}
+
+% ============================================================
+% General options
+% ============================================================
+
+\ExecuteBibliographyOptions{
+  sorting=none,
+  maxnames=3,
+  giveninits=true
+}
+
+% ============================================================
+% Names
+% ============================================================
 
 \DeclareNameAlias{default}{family-given}
 
-\DeclareFieldFormat{title}{„#1“}
-\DeclareFieldFormat{booktitle}{„#1“}
-\DeclareFieldFormat{journaltitle}{„#1“}
-\DeclareFieldFormat{publisher}{#1}
-\DeclareFieldFormat{location}{#1}
+% ============================================================
+% Titles
+% ============================================================
 
-\DeclareFieldFormat{year}{#1}
+% Do NOT use \mkbibquote here.
+% Quotation marks were producing the '?' characters in the PDF.
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,inreference,book,manual,misc,online,thesis,unpublished]
+  {title}{#1}
+
+\DeclareFieldFormat{journaltitle}{#1}
+
+% ============================================================
+% Volume / number
+% ============================================================
+
+\DeclareFieldFormat{volume}{#1}
+
+\DeclareFieldFormat{number}{#1}
+
+% ============================================================
+% Pages
+% ============================================================
 
 \DeclareFieldFormat{pages}{С.~#1}
 
-\DeclareFieldFormat{url}{URL: \url{#1}}
-\DeclareFieldFormat{doi}{DOI:~#1}
+% ============================================================
+% DOI
+% ============================================================
+
+\DeclareFieldFormat{doi}{DOI:\space\href{https://doi.org/#1}{#1}}
+
+% ============================================================
+% URL
+% ============================================================
+
+\DeclareFieldFormat{url}{URL:\space\url{#1}}
+
+% ============================================================
+% ISBN
+% ============================================================
+
+\DeclareFieldFormat{isbn}{ISBN:\space#1}
+
+% ============================================================
+% Date
+% ============================================================
+
+\DeclareFieldFormat{date}{#1}
+
+% ============================================================
+% Publisher / location
+% ============================================================
 
 \renewbibmacro*{publisher+location+date}{%
-  \printlist{publisher}%
-  \setunit*{\addcomma\space}%
   \printlist{location}%
-  \setunit*{\addcomma\space}%
-  \printfield{year}%
+  \setunit{\addcomma\space}%
+  \printlist{publisher}%
+  \setunit{\addcomma\space}%
+  \printdate%
 }
 
-\renewbibmacro*{title}{%
-  \printfield{title}%
-  \newunit
-}
+% ============================================================
+% Article
+% ============================================================
 
-\renewbibmacro*{author}{%
+\DeclareBibliographyDriver{article}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
   \printnames{author}%
-  \newunit
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \printfield{journaltitle}%
+  \setunit{\addcomma\space}%
+  \printdate%
+  \setunit{\addperiod\space}%
+  \printfield{volume}%
+  \iffieldundef{number}
+    {}
+    {%
+      \setunit{\addcomma\space}%
+      \printfield{number}%
+    }%
+  \iffieldundef{pages}
+    {}
+    {%
+      \setunit{\addcomma\space}%
+      \printfield{pages}%
+    }%
+  \setunit{\addperiod\space}%
+  \printfield{doi}%
+  \usebibmacro{finentry}%
 }
 
-\renewbibmacro*{finentry}{\finentry}
+% ============================================================
+% Book
+% ============================================================
+
+\DeclareBibliographyDriver{book}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \usebibmacro{publisher+location+date}%
+  \iffieldundef{isbn}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{isbn}%
+    }%
+  \iffieldundef{doi}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{doi}%
+    }%
+  \iffieldundef{url}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{url}%
+    }%
+  \usebibmacro{finentry}%
+}
+
+% ============================================================
+% Inbook / Incollection / Inproceedings
+% ============================================================
+
+\DeclareBibliographyDriver{inbook}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \printfield{booktitle}%
+  \setunit{\addperiod\space}%
+  \usebibmacro{publisher+location+date}%
+  \iffieldundef{pages}
+    {}
+    {%
+      \setunit{\addcomma\space}%
+      \printfield{pages}%
+    }%
+  \setunit{\addperiod\space}%
+  \printfield{doi}%
+  \usebibmacro{finentry}%
+}
+
+\DeclareBibliographyDriver{incollection}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \printfield{booktitle}%
+  \setunit{\addperiod\space}%
+  \usebibmacro{publisher+location+date}%
+  \iffieldundef{pages}
+    {}
+    {%
+      \setunit{\addcomma\space}%
+      \printfield{pages}%
+    }%
+  \setunit{\addperiod\space}%
+  \printfield{doi}%
+  \usebibmacro{finentry}%
+}
+
+\DeclareBibliographyDriver{inproceedings}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \printfield{booktitle}%
+  \setunit{\addperiod\space}%
+  \usebibmacro{publisher+location+date}%
+  \iffieldundef{pages}
+    {}
+    {%
+      \setunit{\addcomma\space}%
+      \printfield{pages}%
+    }%
+  \setunit{\addperiod\space}%
+  \printfield{doi}%
+  \usebibmacro{finentry}%
+}
+
+% ============================================================
+% Online / miscellaneous
+% ============================================================
+
+\DeclareBibliographyDriver{online}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \setunit{\addperiod\space}%
+  \printdate%
+  \iffieldundef{url}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{url}%
+    }%
+  \usebibmacro{finentry}%
+}
+
+\DeclareBibliographyDriver{misc}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames{author}%
+  \setunit{\addperiod\space}%
+  \printfield{title}%
+  \iffieldundef{year}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printdate%
+    }%
+  \iffieldundef{url}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{url}%
+    }%
+  \usebibmacro{finentry}%
+}

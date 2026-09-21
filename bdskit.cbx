@@ -18,11 +18,12 @@
 % You should have received a copy of the GNU General Public License
 % along with biblatex-bdskit. If not, see <https://www.gnu.org/licenses/>.
 
-\ProvidesFile{bdskit.cbx}[2026/08/10 BDS-like citation style]
+\ProvidesFile{bdskit.cbx}[2026/09/17 BDS-like citation style]
 
 \RequireCitationStyle{numeric-comp}
 
-\ExecuteBibliographyOptions{sortcites=true}
+\ExecuteBibliographyOptions{
+  sortcites=true
+}
 
 \DeclareDelimFormat{multicitedelim}{\addcomma\space}
-
