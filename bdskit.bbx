@@ -17,7 +17,7 @@
 % You should have received a copy of the GNU General Public License
 % along with biblatex-bdskit. If not, see <https://www.gnu.org/licenses/>.
 
-\ProvidesFile{bdskit.bbx}[2026/09/17 BDS-like bibliography style]
+\ProvidesFile{bdskit.bbx}[2026/09/25 BDS-like bibliography style]
 
 % ============================================================
 % Base bibliography style
@@ -45,21 +45,21 @@
 % Titles
 % ============================================================
 
-% Do NOT use \mkbibquote here.
-% Quotation marks were producing the '?' characters in the PDF.
+% Print titles without quotation marks.
+% Use \bibsentence to preserve normal interword spacing.
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,inreference,book,manual,misc,online,thesis,unpublished]
   {title}{#1}
 
 \DeclareFieldFormat{journaltitle}{#1}
+\DeclareFieldFormat{booktitle}{#1}
 
 % ============================================================
 % Volume / number
 % ============================================================
 
 \DeclareFieldFormat{volume}{#1}
-
 \DeclareFieldFormat{number}{#1}
 
 % ============================================================
@@ -81,6 +81,18 @@
 \DeclareFieldFormat{url}{URL:\space\url{#1}}
 
 % ============================================================
+% URL access date
+% ============================================================
+
+% The urldate field is printed automatically by the bdskit-url
+% bibliography macro whenever an access date is present.
+%
+% Example:
+%   URL: https://example.com, достъпен 25.09.2026.
+
+\DeclareFieldFormat{urldate}{#1}
+
+% ============================================================
 % ISBN
 % ============================================================
 
@@ -93,7 +105,7 @@
 \DeclareFieldFormat{date}{#1}
 
 % ============================================================
-% Publisher / location
+% Publisher / location / date
 % ============================================================
 
 \renewbibmacro*{publisher+location+date}{%
@@ -102,6 +114,83 @@
   \printlist{publisher}%
   \setunit{\addcomma\space}%
   \printdate%
+}
+
+% ============================================================
+% Note
+% ============================================================
+
+\newbibmacro*{bdskit-note}{%
+  \iffieldundef{note}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{note}%
+    }%
+}
+
+% ============================================================
+% ISBN
+% ============================================================
+
+\newbibmacro*{bdskit-isbn}{%
+  \iffieldundef{isbn}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{isbn}%
+    }%
+}
+
+% ============================================================
+% DOI
+% ============================================================
+
+\newbibmacro*{bdskit-doi}{%
+  \iffieldundef{doi}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{doi}%
+    }%
+}
+
+% ============================================================
+% URL
+% ============================================================
+
+% Prints the URL and, if available, its access date.
+%
+% Expected output:
+%   URL: https://example.com, достъпен 25.09.2026.
+
+\newbibmacro*{bdskit-url}{%
+  \iffieldundef{url}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{url}%
+      \iffieldundef{urldate}
+        {}
+        {%
+          \setunit{\addcomma\space}%
+          достъпен\space
+          \printdate[urldate]%
+        }%
+    }%
+}
+
+% ============================================================
+% Organization
+% ============================================================
+
+\newbibmacro*{bdskit-organization}{%
+  \iffieldundef{organization}
+    {}
+    {%
+      \setunit{\addperiod\space}%
+      \printfield{organization}%
+    }%
 }
 
 % ============================================================
@@ -132,8 +221,8 @@
       \setunit{\addcomma\space}%
       \printfield{pages}%
     }%
-  \setunit{\addperiod\space}%
-  \printfield{doi}%
+  \usebibmacro{bdskit-doi}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
 
@@ -149,29 +238,15 @@
   \printfield{title}%
   \setunit{\addperiod\space}%
   \usebibmacro{publisher+location+date}%
-  \iffieldundef{isbn}
-    {}
-    {%
-      \setunit{\addperiod\space}%
-      \printfield{isbn}%
-    }%
-  \iffieldundef{doi}
-    {}
-    {%
-      \setunit{\addperiod\space}%
-      \printfield{doi}%
-    }%
-  \iffieldundef{url}
-    {}
-    {%
-      \setunit{\addperiod\space}%
-      \printfield{url}%
-    }%
+  \usebibmacro{bdskit-note}%
+  \usebibmacro{bdskit-isbn}%
+  \usebibmacro{bdskit-doi}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
 
 % ============================================================
-% Inbook / Incollection / Inproceedings
+% Inbook
 % ============================================================
 
 \DeclareBibliographyDriver{inbook}{%
@@ -190,10 +265,14 @@
       \setunit{\addcomma\space}%
       \printfield{pages}%
     }%
-  \setunit{\addperiod\space}%
-  \printfield{doi}%
+  \usebibmacro{bdskit-doi}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
+
+% ============================================================
+% Incollection
+% ============================================================
 
 \DeclareBibliographyDriver{incollection}{%
   \usebibmacro{bibindex}%
@@ -211,10 +290,14 @@
       \setunit{\addcomma\space}%
       \printfield{pages}%
     }%
-  \setunit{\addperiod\space}%
-  \printfield{doi}%
+  \usebibmacro{bdskit-doi}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
+
+% ============================================================
+% Inproceedings
+% ============================================================
 
 \DeclareBibliographyDriver{inproceedings}{%
   \usebibmacro{bibindex}%
@@ -232,13 +315,13 @@
       \setunit{\addcomma\space}%
       \printfield{pages}%
     }%
-  \setunit{\addperiod\space}%
-  \printfield{doi}%
+  \usebibmacro{bdskit-doi}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
 
 % ============================================================
-% Online / miscellaneous
+% Online
 % ============================================================
 
 \DeclareBibliographyDriver{online}{%
@@ -249,14 +332,14 @@
   \printfield{title}%
   \setunit{\addperiod\space}%
   \printdate%
-  \iffieldundef{url}
-    {}
-    {%
-      \setunit{\addperiod\space}%
-      \printfield{url}%
-    }%
+  \usebibmacro{bdskit-note}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
+
+% ============================================================
+% Miscellaneous
+% ============================================================
 
 \DeclareBibliographyDriver{misc}{%
   \usebibmacro{bibindex}%
@@ -270,11 +353,9 @@
       \setunit{\addperiod\space}%
       \printdate%
     }%
-  \iffieldundef{url}
-    {}
-    {%
-      \setunit{\addperiod\space}%
-      \printfield{url}%
-    }%
+  \usebibmacro{bdskit-organization}%
+  \usebibmacro{bdskit-note}%
+  \usebibmacro{bdskit-url}%
   \usebibmacro{finentry}%
 }
+
