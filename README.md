@@ -250,24 +250,23 @@ Additional bibliographic entry types and more detailed BDS-specific formatting r
 
 Planned improvements include:
 
-* [ ] Books
-* [ ] Journal articles
-* [ ] Conference proceedings
-* [ ] Standards
-* [ ] Theses and dissertations
-* [ ] Technical reports
-* [ ] Online sources
-* [ ] Edited books
-* [ ] Chapters in edited books
-* [ ] Institutional authors
-* [ ] Multiple-author formatting
-* [ ] Improved Cyrillic/Latin sorting
-* [ ] Access-date formatting
-* [ ] ISBN and ISSN formatting
-* [ ] More precise DOI handling
-* [ ] Additional BDS-specific formatting rules
-* [ ] Extended test bibliography
-* [ ] Automated regression tests
+* [x] Books
+* [x] Journal articles
+* [x] Conference proceedings
+* [x] Standards
+* [x] Theses and dissertations
+* [x] Technical reports
+* [x] Online sources
+* [x] Edited books
+* [x] Chapters in edited books
+* [x] Institutional authors
+* [x] Multiple-author formatting
+* [x] Improved Cyrillic/Latin sorting
+* [x] Access-date formatting
+* [x] ISBN and ISSN formatting
+* [x] More precise DOI handling
+* [x] Additional BDS-specific formatting rules
+* [-] Extended test bibliography
 
 ## Contributing
 
